@@ -3,7 +3,7 @@
  Spent too much time on error correction because of the fact that I spent 2-3 weeks learning to understand Reed-Solomon error correction, Galois field arithmetic, modulo 2 addition, multiplication, division, etc. Galois Field of 256 polynomial multiplication is eventually what I settled on. 
  Scrolling through the Java file you will notice that there are some extremely long lists. Two of those are because I really do not feel like generating entire lists for the GF(256) finite field and alpha notation for it. 
  
- The encoding is Binary Type, meaning that the only characters that can be encoded are in the charset ISO 8859-1 (Latin-1), though I don't know how to make it such that the encoding always occurs such that regardless of the compiler encoding charset, the inputted string to be converted will always have its binary bits converted to their ISO 8859-1 values. I could use another list, but I don't feel like spending more time writing lists. 
+ The encoding is byte-encoding, meaning that the only characters that can be encoded are in the charset ISO 8859-1 (Latin-1), though I don't know how to make it such that the encoding always occurs such that regardless of the compiler encoding charset, the inputted string to be converted will always have its binary bits converted to their ISO 8859-1 values. I could use another list, but I don't feel like spending more time writing lists. 
  
  I originally planned to add a "Restart" button, but I can't seem to find how to do it. 
  
