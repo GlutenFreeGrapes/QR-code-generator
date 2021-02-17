@@ -3,7 +3,7 @@
  Spent too much time on error correction because of the fact that I spent 2-3 weeks learning to understand Reed-Solomon error correction, Galois field arithmetic, modulo 2 addition, multiplication, division, etc. Galois Field of 256 polynomial multiplication is eventually what I settled on. 
  Scrolling through the Java file you will notice that there are some extremely long lists. Two of those are because I really do not feel like generating entire lists for the GF(256) finite field and alpha notation for it. 
  
- The encoding is byte-encoding, meaning that the only characters that can be encoded are in the charset ISO 8859-1 (Latin-1), though I don't know how to make it such that the encoding always occurs such that regardless of the compiler encoding charset, the inputted string to be converted will always have its binary bits converted to their ISO 8859-1 values. I could use another list, but I don't feel like spending more time writing lists. 
+ The encoding is byte-encoding, meaning that the only characters that can be encoded are in the charset UTF-8. 
  
  I originally planned to add a "Restart" button, but I can't seem to find how to do it. 
  
@@ -12,9 +12,8 @@
  Here is the QR code generating tutorial that I referenced: 
  https://www.thonky.com/qr-code-tutorial/
  
- ISO Standards that played a role in this thing: 
+ ISO Standards that were used: 
  - ISO/IEC 18004:2015,     CHF 198 = 222.52 USD in 2021            Information technology — Automatic identification and data capture techniques — QR Code bar code symbology specification
- - ISO/IEC 8859-1:1998,    CHF 58  =  65.18 USD in 2021            Information technology — 8-bit single-byte coded graphic character sets — Part 1: Latin alphabet No. 1
  
  About error correction: 
  - Error correction is frequently used in order to correct for things like mistransribing pixels and all. If the data has been mistranscribed in some way, or the QR code has been torn or is dirty, error correction can help and ensure that the QR code and its data will be read just fine. 
