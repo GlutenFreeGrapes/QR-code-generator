@@ -27,34 +27,41 @@ public class QR
       int[] maxlengths = {2953, 2331, 1663, 1273};
       while (j.equals("")||j.length()>maxlengths[0])
       {
-         j = (String)JOptionPane.showInputDialog(null, "What message do you want to encode? ", "Message", JOptionPane.QUESTION_MESSAGE, normal, null, null);
-         if (j != null)
-         {
-            l = j.getBytes(StandardCharsets.UTF_8).length;   
-         }
-         if (j == null)
-         {
-            System.exit(0);
-         }
-         else if(j.equals(""))
-         {
-            JOptionPane.showMessageDialog(null,"Please enter a message. ","Error",JOptionPane.WARNING_MESSAGE, warning);
-         }
-         else if(l>maxlengths[0])
-         {
-            JOptionPane.showMessageDialog(null,"Message too long. ","Error",JOptionPane.WARNING_MESSAGE, warning);
-         }
-         else if (l>maxlengths[1])
-         {
-            a = Arrays.copyOf(a, 1);
-         }
-         else if (l>maxlengths[2])
-         {
-            a = Arrays.copyOf(a, 2);
-         }
-         else if (l>maxlengths[3])
-         {
-            a = Arrays.copyOf(a, 3);
+         JPanel pan = new JPanel();
+         JLabel g = new JLabel("What message would you like to encode? ");
+         JTextArea input = new JTextArea(4, 40);
+         pan.setLayout(new BorderLayout());
+         input.setLineWrap(true);
+         pan.add(g, BorderLayout.NORTH);
+         pan.add(new JScrollPane(input), BorderLayout.SOUTH);
+         switch (JOptionPane.showConfirmDialog(null, pan, "Message", JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, normal)) {
+            case JOptionPane.OK_OPTION:
+               j = input.getText();
+               l = j.getBytes(StandardCharsets.UTF_8).length;   
+               if(j.equals(""))
+               {
+                  JOptionPane.showMessageDialog(null,"Please enter a message. ","Error",JOptionPane.WARNING_MESSAGE, warning);
+               }
+               else if(l>maxlengths[0])
+               {
+                  JOptionPane.showMessageDialog(null,"Message too long. ","Error",JOptionPane.WARNING_MESSAGE, warning);
+               }
+               else if (l>maxlengths[1])
+               {
+                  a = Arrays.copyOf(a, 1);
+               }
+               else if (l>maxlengths[2])
+               {
+                  a = Arrays.copyOf(a, 2);
+               }
+               else if (l>maxlengths[3])
+               {
+                  a = Arrays.copyOf(a, 3);
+               }
+               break;
+            case JOptionPane.CANCEL_OPTION:
+               System.exit(0);
+               break;
          }
       }
       int ec = 0;
