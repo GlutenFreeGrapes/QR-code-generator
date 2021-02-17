@@ -7,6 +7,7 @@ import javax.imageio.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
+import java.nio.charset.*;
 public class QR
 {
    public static void main(String[] args)
@@ -19,13 +20,18 @@ public class QR
       {
       }
       String j = "";
+      int l=0;
       ImageIcon normal = new ImageIcon("imgs/grapesNormal.png");
       ImageIcon warning = new ImageIcon("imgs/grapesAngery.png");
       String[] a = {"1","2","3","4"};
       int[] maxlengths = {2953, 2331, 1663, 1273};
       while (j.equals("")||j.length()>maxlengths[0])
       {
-         j = (String)JOptionPane.showInputDialog(null, "What message do you want to encode? ", "Message", JOptionPane.QUESTION_MESSAGE, normal, null, null);   
+         j = (String)JOptionPane.showInputDialog(null, "What message do you want to encode? ", "Message", JOptionPane.QUESTION_MESSAGE, normal, null, null);
+         if (j != null)
+         {
+            l = j.getBytes(StandardCharsets.UTF_8).length;   
+         }
          if (j == null)
          {
             System.exit(0);
@@ -34,19 +40,19 @@ public class QR
          {
             JOptionPane.showMessageDialog(null,"Please enter a message. ","Error",JOptionPane.WARNING_MESSAGE, warning);
          }
-         else if(j.length()>maxlengths[0])
+         else if(l>maxlengths[0])
          {
             JOptionPane.showMessageDialog(null,"Message too long. ","Error",JOptionPane.WARNING_MESSAGE, warning);
          }
-         else if (j.length()>maxlengths[1])
+         else if (l>maxlengths[1])
          {
             a = Arrays.copyOf(a, 1);
          }
-         else if (j.length()>maxlengths[2])
+         else if (l>maxlengths[2])
          {
             a = Arrays.copyOf(a, 2);
          }
-         else if (j.length()>maxlengths[3])
+         else if (l>maxlengths[3])
          {
             a = Arrays.copyOf(a, 3);
          }
@@ -251,7 +257,8 @@ class QREncoder
    {
       er = ec;
       t = s;
-      while(s.length()>bytecapac[4*(version-1)+ec-1])
+      int ddddd = s.getBytes(StandardCharsets.UTF_8).length; 
+      while(ddddd>bytecapac[4*(version-1)+ec-1])
       {
          version++;
       }
@@ -628,24 +635,26 @@ class QREncoder
    }
    public void encode()
    {
-      String[] message = new String[t.length()];
-      char[] chart = t.toCharArray();
-      for(int x=0;x<message.length;x++)
+      String[] message = new String[t.getBytes(StandardCharsets.UTF_8).length];
+      byte[] ms = t.getBytes();
+      try
       {
-         message[x] = Integer.toBinaryString(chart[x]);
+         ms = t.getBytes(StandardCharsets.UTF_8);
+      }
+      catch(Exception e)
+      {
+      }
+      for(int x=0;x<ms.length;x++)
+      {
+         message[x] = Integer.toBinaryString((int)(ms[x]&255));
+         
       }   
       for(int x=0;x<message.length;x++)
       {
-         if (message[x].length()<8)
-         {
-            for(int m=message[x].length();m<8;m++)
-            {
-               message[x] = "0"+message[x];
-            }
-         }
+         message[x] = pad(8, message[x], 'l');
       }
       String tomp = "0100";
-      String teemp = Integer.toBinaryString(t.length());
+      String teemp = Integer.toBinaryString(ms.length);
       if (version<10)
       {
          while (teemp.length()<8)
