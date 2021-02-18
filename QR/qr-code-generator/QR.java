@@ -1,4 +1,4 @@
-//GlutenFreeGrapes, 27 January 2021
+//GlutenFreeGrapes, 18 February 2021
 //QR Code Tutorial: https://www.thonky.com/qr-code-tutorial/
 import java.util.*;
 import java.io.*;
@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
 import java.nio.charset.*;
+import java.net.*;
+import javax.sound.sampled.*;
 public class QR
 {
    public static void main(String[] args)
@@ -21,11 +23,28 @@ public class QR
       }
       String j = "";
       int l=0;
-      ImageIcon normal = new ImageIcon("imgs/grapesNormal.png");
-      ImageIcon warning = new ImageIcon("imgs/grapesAngery.png");
+      ImageIcon normal; 
+      ImageIcon warning;
+      String error = "https://cdn.discordapp.com/attachments/711352466112774144/811989252928700436/Wilhelm_Scream.ogg.wav";
+      try
+      {
+         normal = new ImageIcon(new ImageIcon(new URL("https://media.discordapp.net/attachments/711352466112774144/812004867915644988/grapesNormal.png")).getImage().getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH));
+      }
+      catch(Exception e)
+      {
+         normal = new ImageIcon();
+      }
+      try
+      {
+         warning = new ImageIcon(new ImageIcon(new URL("https://media.discordapp.net/attachments/711352466112774144/812004871715946586/grapesAngery.png")).getImage().getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH));
+      }
+      catch(Exception e)
+      {
+         warning = new ImageIcon();
+      }
       String[] a = {"1","2","3","4"};
       int[] maxlengths = {2953, 2331, 1663, 1273};
-      while (j.equals("")||j.length()>maxlengths[0])
+      while (j.replaceAll("[\r\n]+", "").replaceAll(" ", "").equals("")||j.length()>maxlengths[0])
       {
          JPanel pan = new JPanel();
          JLabel g = new JLabel("What message would you like to encode? ");
@@ -33,17 +52,19 @@ public class QR
          pan.setLayout(new BorderLayout());
          input.setLineWrap(true);
          pan.add(g, BorderLayout.NORTH);
-         pan.add(new JScrollPane(input), BorderLayout.SOUTH);
+         pan.add(new JScrollPane(input), BorderLayout.CENTER);
          switch (JOptionPane.showConfirmDialog(null, pan, "Message", JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, normal)) {
             case JOptionPane.OK_OPTION:
                j = input.getText();
                l = j.getBytes(StandardCharsets.UTF_8).length;   
-               if(j.equals(""))
+               if(j.replaceAll("[\r\n]+", "").replaceAll(" ", "").equals(""))
                {
+                  play(error);
                   JOptionPane.showMessageDialog(null,"Please enter a message. ","Error",JOptionPane.WARNING_MESSAGE, warning);
                }
                else if(l>maxlengths[0])
                {
+                  play(error);
                   JOptionPane.showMessageDialog(null,"Message too long. ","Error",JOptionPane.WARNING_MESSAGE, warning);
                }
                else if (l>maxlengths[1])
@@ -84,6 +105,18 @@ public class QR
       frame.setResizable(false);
       frame.setVisible(true);
    }
+   public static void play(String sound)
+   {
+      try {
+         AudioInputStream audioIn = AudioSystem.getAudioInputStream(new URL(sound));
+         Clip clip = AudioSystem.getClip();
+         clip.open(audioIn);
+         clip.start();
+      } 
+      catch (Exception e) 
+      {
+      }
+   }
    public static int[][] encode(String s, int i, int[] qrinfo)
    {
       QREncoder w = new QREncoder (s,i);
@@ -105,15 +138,13 @@ class ContentPanel extends JPanel
    static final long serialVersionUID = 69420;
    private int[] qrinfo;
    private int[][] m;
-   private int version;
    private int pixelsize = 0;
    private Font f;
    private JButton save;
    public ContentPanel(int[][] n, int[] info)
    {
       m = n;
-      version = (m.length-17)/4;
-      pixelsize = 9-Math.round(8*version/41);
+      pixelsize = (int)Math.ceil(450/(m.length+8));
       qrinfo = info;
       setLayout(null);
       f = new Font("Bahnschrift", Font.BOLD, 20);
@@ -734,7 +765,7 @@ class QREncoder
       genpoly = new int[]{1,1};
       for(int x=1;x<n;x++)
       {
-         int[] y=new int[]{1,antilog[x]};
+         int[] y=new int[]{1,antilog[mod255(x)]};
          genpoly = polymult(genpoly,y);
       }
    }  
@@ -835,7 +866,7 @@ class QREncoder
          generate(blockinfo[0]);            
          for (int x=0;x<genpoly.length;x++) 
          {
-            genpoly[x] = antilog[mod255(log[genpoly[x]-1]+log[mespoly[0]-1])];
+            genpoly[x] = antilog[mod255(log[mod255(genpoly[x]-1)]+log[mod255(mespoly[0]-1)])];
          }
          for(int x=0;x<genpoly.length;x++) 
          {
