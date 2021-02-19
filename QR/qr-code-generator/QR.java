@@ -1,4 +1,4 @@
-//GlutenFreeGrapes, 18 February 2021
+//GlutenFreeGrapes, 19 February 2021
 //QR Code Tutorial: https://www.thonky.com/qr-code-tutorial/
 import java.util.*;
 import java.io.*;
@@ -47,13 +47,15 @@ public class QR
       while (j.replaceAll("[\r\n]+", "").replaceAll(" ", "").equals("")||j.length()>maxlengths[0])
       {
          JPanel pan = new JPanel();
-         JLabel g = new JLabel("What message would you like to encode? ");
+         JLabel g = new JLabel("What message would you like to encode? Maximum size "+maxlengths[0]+" bytes. ");
          JTextArea input = new JTextArea(4, 40);
          pan.setLayout(new BorderLayout());
-         input.setLineWrap(true);
+         input.setLineWrap(false);
+         input.setText(j);
          pan.add(g, BorderLayout.NORTH);
          pan.add(new JScrollPane(input), BorderLayout.CENTER);
-         switch (JOptionPane.showConfirmDialog(null, pan, "Message", JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, normal)) {
+         switch (JOptionPane.showConfirmDialog(null, pan, "Message", JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, normal))
+         {
             case JOptionPane.OK_OPTION:
                j = input.getText();
                l = j.getBytes(StandardCharsets.UTF_8).length;   
@@ -65,7 +67,7 @@ public class QR
                else if(l>maxlengths[0])
                {
                   play(error);
-                  JOptionPane.showMessageDialog(null,"Message too long. ","Error",JOptionPane.WARNING_MESSAGE, warning);
+                  JOptionPane.showMessageDialog(null,"Message too long. \nMaximum length "+maxlengths[0]+" bytes, input length "+l+" bytes. ","Error",JOptionPane.WARNING_MESSAGE, warning);
                }
                else if (l>maxlengths[1])
                {
