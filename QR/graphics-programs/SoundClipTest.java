@@ -10,7 +10,7 @@ public class SoundClipTest extends JFrame {
    public SoundClipTest() {
       
       try {
-         AudioInputStream audioIn = AudioSystem.getAudioInputStream(new URL("https://cdn.discordapp.com/attachments/711352466112774144/811989252928700436/Wilhelm_Scream.ogg.wav"));
+         AudioInputStream audioIn = AudioSystem.getAudioInputStream("Wilhelm_Scream.ogg.wav");
          Clip clip = AudioSystem.getClip();
          clip.open(audioIn);
          clip.start();
