@@ -25,7 +25,7 @@ public class QR
       int l=0;
       ImageIcon normal; 
       ImageIcon warning;
-      String error = "https://cdn.discordapp.com/attachments/711352466112774144/811989252928700436/Wilhelm_Scream.ogg.wav";
+      String error = "https://cdn.discordapp.com/attachments/711352466112774144/819294403792207872/Wilhelm_Scream.ogg.wav";
       try
       {
          normal = new ImageIcon(new ImageIcon(new URL("https://media.discordapp.net/attachments/711352466112774144/812004867915644988/grapesNormal.png")).getImage().getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH));
@@ -44,7 +44,7 @@ public class QR
       }
       String[] a = {"1","2","3","4"};
       int[] maxlengths = {2953, 2331, 1663, 1273};
-      while (j.replaceAll("[\r\n]+", "").replaceAll(" ", "").equals("")||j.length()>maxlengths[0])
+      while (empty(j)||j.length()>maxlengths[0])
       {
          JPanel pan = new JPanel();
          JLabel g = new JLabel("What message would you like to encode? Maximum size "+maxlengths[0]+" bytes. ");
@@ -56,10 +56,13 @@ public class QR
          pan.add(new JScrollPane(input), BorderLayout.CENTER);
          switch (JOptionPane.showConfirmDialog(null, pan, "Message", JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, normal))
          {
+            case JOptionPane.CLOSED_OPTION:
+               System.exit(0);
+               break;
             case JOptionPane.OK_OPTION:
                j = input.getText();
                l = j.getBytes(StandardCharsets.UTF_8).length;   
-               if(j.replaceAll("[\r\n]+", "").replaceAll(" ", "").equals(""))
+               if(empty(j))
                {
                   play(error);
                   JOptionPane.showMessageDialog(null,"Please enter a message. ","Error",JOptionPane.WARNING_MESSAGE, warning);
@@ -107,9 +110,27 @@ public class QR
       frame.setResizable(false);
       frame.setVisible(true);
    }
+   public static boolean empty(String s)
+   {
+      int[] whitespace = new int[]{9,10,11,12,13,32,133,160,5760,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8232,8233,8239,8287,12288,6158,8203,8204,8205,8288,65279};
+      String ws = new String(whitespace, 0, whitespace.length);
+      for(int x=0;x<whitespace.length;x++)
+      {
+         s = s.replaceAll(ws.substring(x,x+1), "");
+      }
+      if (s.equals(""))
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
    public static void play(String sound)
    {
-      try {
+      try
+      {
          AudioInputStream audioIn = AudioSystem.getAudioInputStream(new URL(sound));
          Clip clip = AudioSystem.getClip();
          clip.open(audioIn);
